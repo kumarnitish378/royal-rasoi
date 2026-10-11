@@ -1,0 +1,73 @@
+rules_version = '2';
+// Royal Rasoi – Firestore security rules.
+// Paste into Firebase console → Firestore Database → Rules → Publish.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function myPhone() { return request.auth.token.phone_number; }
+    function roleRef() { return /databases/$(database)/documents/roles/$(myPhone()); }
+    function hasRole(r) { return signedIn() && exists(roleRef()) && get(roleRef()).data.role == r; }
+    function isAdmin() { return hasRole('admin'); }
+    function isRider() { return hasRole('rider'); }
+    function changed() { return request.resource.data.diff(resource.data).affectedKeys(); }
+
+    // Public: menu and shop settings. Only managers can edit.
+    match /menu/{id}     { allow read: if true; allow write: if isAdmin(); }
+    match /settings/{id} { allow read: if true; allow write: if isAdmin(); }
+
+    // Staff list. Doc id = phone in +91XXXXXXXXXX format.
+    match /roles/{phone} {
+      allow read: if signedIn() && (myPhone() == phone || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    // Live rider positions (dashboard map). Customers get the rider position copied into their own order.
+    match /riderLocations/{phone} {
+      allow read: if isAdmin();
+      allow write: if (isRider() || isAdmin()) && myPhone() == phone;
+    }
+
+    match /orders/{orderId} {
+      allow read: if signedIn() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin() ||
+        (isRider() && resource.data.riderPhone == myPhone()));
+
+      allow create: if signedIn()
+        && request.resource.data.id == orderId
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.phone == myPhone()
+        && request.resource.data.status == 'placed'
+        && request.resource.data.payment.status == 'pending'
+        && request.resource.data.payment.method in ['cod', 'upi']
+        && request.resource.data.items is list
+        && request.resource.data.items.size() > 0
+        && request.resource.data.items.size() <= 40
+        && request.resource.data.total is number
+        && request.resource.data.total > 0
+        && !('riderPhone' in request.resource.data);
+
+      allow update: if
+        // managers: anything
+        isAdmin()
+        // assigned rider: move status forward, share location, record cash collection
+        || (isRider() && resource.data.riderPhone == myPhone()
+            && changed().hasOnly(['status', 'statusHistory', 'riderLocation', 'deliveredAt', 'payment', 'updatedAt'])
+            && request.resource.data.status in ['accepted', 'preparing', 'out_for_delivery', 'delivered'])
+        // customer: cancel only before the restaurant accepts
+        || (signedIn() && resource.data.userId == request.auth.uid
+            && resource.data.status == 'placed'
+            && request.resource.data.status == 'cancelled'
+            && changed().hasOnly(['status', 'statusHistory', 'cancelledBy', 'updatedAt']))
+        // customer: submit UPI reference number (cannot mark it paid)
+        || (signedIn() && resource.data.userId == request.auth.uid
+            && resource.data.payment.method == 'upi'
+            && request.resource.data.payment.method == 'upi'
+            && request.resource.data.payment.status == 'pending'
+            && changed().hasOnly(['payment', 'updatedAt']));
+
+      allow delete: if isAdmin();
+    }
+  }
+}

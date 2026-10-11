@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Royal Rasoi – Order Online | Chakia, East Champaran</title>
+<meta name="description" content="Order Indo-Chinese & Indo-Italian food from Royal Rasoi, Chakia. Pizza, burgers, noodles, momos, fried rice – home delivery with live rider tracking.">
+<meta name="theme-color" content="#0c0a07">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Restaurant","name":"Royal Rasoi","servesCuisine":["Indo-Chinese","Indo-Italian","Pizza"],
+ "address":{"@type":"PostalAddress","streetAddress":"Ravindra Thakur Rd, Patkhauliya, Koyla Belwa","addressLocality":"Chakia","addressRegion":"Bihar","postalCode":"845412","addressCountry":"IN"},
+ "telephone":"+91-77798-69252","priceRange":"₹"}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <a href="#/" class="brand"><span class="crown">♛</span><span><b>Royal Rasoi</b><small>Indo-Chinese · Indo-Italian</small></span></a>
+  <nav><a href="#/orders">My orders</a></nav>
+</header>
+
+<main>
+  <section id="view-menu">
+    <div class="hero">
+      <h1>Royal Rasoi</h1>
+      <p class="tag">Desi Soul ♥ Chinese Twist ♥ Italian Touch</p>
+      <p class="addr" id="shop-addr"></p>
+      <div class="hero-row">
+        <span id="open-badge" class="badge"></span>
+        <a id="call-btn" class="btn ghost sm" href="tel:+917779869252">📞 Call to order</a>
+      </div>
+      <p class="muted sm" id="delivery-txt"></p>
+    </div>
+
+    <div class="filters">
+      <div class="seg" id="cuisine-seg">
+        <button data-c="all" class="on">All</button><button data-c="chinese">Indo-Chinese</button><button data-c="italian">Indo-Italian</button>
+      </div>
+      <label class="switch"><input type="checkbox" id="veg-only"><span>Veg only</span></label>
+      <input id="search" type="search" placeholder="Search dishes…" aria-label="Search dishes">
+      <div class="chips" id="cat-chips"></div>
+    </div>
+
+    <div id="menu"><p class="muted center">Loading menu…</p></div>
+    <p class="note-request">🍲 Chicken &amp; Mutton Kadhai available on request — mention it in your order note or call us.</p>
+  </section>
+
+  <section id="view-orders" hidden>
+    <h2>My orders</h2>
+    <div id="orders-body"></div>
+  </section>
+
+  <section id="view-track" hidden>
+    <p><a href="#/orders">← My orders</a></p>
+    <div id="tr-info"></div>
+    <div id="tr-map" class="map tall"></div>
+    <div id="tr-details"></div>
+  </section>
+</main>
+
+<button id="cart-bar" class="cart-bar" hidden></button>
+
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-bg" data-close></div>
+  <div class="sheet-body"><button class="sheet-close" data-close aria-label="Close">×</button><div id="sheet-body"></div></div>
+</div>
+
+<footer>
+  <div><b style="color:var(--gold)">Royal Rasoi</b> · Prepared with passion, served with a royal touch</div>
+  <div id="foot-contact"></div>
+  <div style="margin-top:6px"><a href="rider.html">Rider login</a> · <a href="admin.html">Restaurant login</a></div>
+</footer>
+<div id="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script type="module" src="js/customer.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Rasoi – Rider</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0c0a07">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <span class="brand"><span class="crown">♛</span><span><b>Royal Rasoi</b><small>Rider</small></span></span>
+  <nav><button id="logout" class="btn ghost sm" hidden>Logout</button></nav>
+</header>
+<main>
+  <div id="gate" class="card" style="max-width:420px;margin:30px auto"></div>
+  <div id="app" hidden>
+    <div class="card duty" id="duty-card">
+      <div><b id="duty-state">Off duty</b><br><small class="muted" id="gps-info">Location is not being shared</small></div>
+      <button id="duty-btn" class="btn primary">Start duty</button>
+    </div>
+    <p class="sm muted">While on duty, keep this page open and the screen on — customers see your live location only for orders you're delivering.</p>
+    <div id="jobs"></div>
+    <p class="sm muted center" id="done-today"></p>
+  </div>
+</main>
+<div id="toast"></div>
+<script type="module" src="js/rider.js"></script>
+</body>
+</html>

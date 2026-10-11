@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Rasoi – Restaurant Dashboard</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0c0a07">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a href="index.html" class="brand"><span class="crown">♛</span><span><b>Royal Rasoi</b><small>Restaurant dashboard</small></span></a>
+  <nav>
+    <button id="sound-btn" class="btn ghost sm" hidden>🔔 Turn on order alert</button>
+    <button id="logout" class="btn ghost sm" hidden>Logout</button>
+  </nav>
+</header>
+<main>
+  <div id="gate" class="card" style="max-width:420px;margin:30px auto"></div>
+
+  <div id="dash" hidden>
+    <div class="tabs" id="tabs">
+      <button data-t="orders" class="on">Orders <span id="new-count" class="pill" hidden></span></button>
+      <button data-t="riders">Riders &amp; staff</button>
+      <button data-t="menu">Menu</button>
+      <button data-t="settings">Settings</button>
+    </div>
+
+    <section id="t-orders">
+      <div class="row" style="justify-content:space-between;margin-top:12px">
+        <div class="seg" id="ord-filter">
+          <button data-f="active" class="on">Active</button><button data-f="delivered">Delivered</button><button data-f="cancelled">Cancelled</button>
+        </div>
+        <label class="switch"><input type="checkbox" id="shop-open"><span id="shop-open-txt">Shop open</span></label>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div id="orders"></div>
+    </section>
+
+    <section id="t-riders" hidden>
+      <div class="card">
+        <h3>Add rider / staff</h3>
+        <div class="grid2">
+          <label>Name<input id="st-name" placeholder="e.g. Raju"></label>
+          <label>Mobile<input id="st-phone" inputmode="numeric" maxlength="10" placeholder="10-digit mobile"></label>
+        </div>
+        <label>Role<select id="st-role"><option value="rider">Rider (delivery)</option><option value="admin">Manager (full dashboard access)</option></select></label>
+        <button class="btn primary" id="st-add" style="margin-top:10px">Add</button>
+        <p class="sm muted">The rider opens <b id="rider-url"></b> on their phone and logs in with this number.</p>
+      </div>
+      <div id="staff"></div>
+      <h3 style="margin-top:16px">Live rider map</h3>
+      <div id="riders-map" class="map tall"></div>
+    </section>
+
+    <section id="t-menu" hidden>
+      <div class="row" style="margin:12px 0">
+        <button class="btn primary" id="m-add">+ Add dish</button>
+        <button class="btn" id="m-seed">Load default Royal Rasoi menu</button>
+      </div>
+      <p class="sm muted">Switch off a dish to show it as “Sold out today”. Tap a dish to edit price or details.</p>
+      <div id="menu-admin"></div>
+    </section>
+
+    <section id="t-settings" hidden>
+      <form id="settings-form" class="card">
+        <h3>Restaurant</h3>
+        <div class="grid2">
+          <label>Name<input name="name"></label>
+          <label>Opening hours (shown to customers)<input name="hours"></label>
+        </div>
+        <label>Address<input name="address"></label>
+        <label>Phone numbers (comma separated)<input name="phones"></label>
+        <label>Email<input name="email" type="email"></label>
+        <h3 style="margin-top:16px">Restaurant location</h3>
+        <p class="sm muted">Stand inside the restaurant and tap “Use current location”, or tap the map. The 3 km delivery area is measured from here.</p>
+        <button type="button" class="btn sm" id="loc-gps">📍 Use current location</button>
+        <div id="set-map" class="map"></div>
+        <p class="sm" id="loc-txt"></p>
+        <h3 style="margin-top:16px">Delivery</h3>
+        <div class="grid2">
+          <label>Delivery radius (km)<input name="radiusKm" type="number" step="0.5" min="0.5"></label>
+          <label>Delivery fee (₹, 0 = free)<input name="deliveryFee" type="number" min="0"></label>
+          <label>Free delivery above (₹, 0 = off)<input name="freeAbove" type="number" min="0"></label>
+          <label>Minimum order (₹, 0 = none)<input name="minOrder" type="number" min="0"></label>
+        </div>
+        <h3 style="margin-top:16px">UPI payments</h3>
+        <div class="grid2">
+          <label>UPI ID (e.g. royalrasoi@okaxis)<input name="upiId" placeholder="leave empty to allow only cash"></label>
+          <label>Payee name<input name="upiName"></label>
+        </div>
+        <button class="btn primary block" style="margin-top:16px">Save settings</button>
+      </form>
+    </section>
+  </div>
+</main>
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-bg" data-close></div>
+  <div class="sheet-body"><button class="sheet-close" data-close aria-label="Close">×</button><div id="sheet-body"></div></div>
+</div>
+<div id="toast"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>
